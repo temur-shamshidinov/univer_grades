@@ -48,10 +48,13 @@ func (t *teacherRepo) CreateTeacher(ctx context.Context, req *models.Teacher) er
 		log.Println("error with CreateTeacher", err)
 		return  err
 	}
-	
+
 	return nil
 }
 func (t *teacherRepo) GetTeacherList(ctx context.Context, req *models.GetListReq) (*models.GetTeacherList, error) {
+	
+	
+	
 	return nil, nil
 }
 func (t *teacherRepo) GetTeacherByID(ctx context.Context, id string) (*models.Teacher, error) {

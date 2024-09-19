@@ -41,6 +41,7 @@ type Group struct {
 
 type Subject struct {
 	SubjectID   uuid.UUID `json:"subject_id"`
+	GroupID     uuid.UUID `json:"group_id"`
 	SubjectName string    `json:"subject_name"`
 	TeacherID   uuid.UUID `json:"teacher_id"`
 	CreatedAt   time.Time `json:"created_at"`
@@ -98,10 +99,10 @@ type TeacherCreateReq struct {
 // TeacherUpdateReq models
 
 type TeacherUpdateReq struct {
-	Name      string `json:"name"`
-	Surname   string `json:"surname"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
+	Name     string `json:"name"`
+	Surname  string `json:"surname"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 // GetCoursesList models

@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"log"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/temur-shamshidinov/univer_grades/models"
@@ -17,6 +18,36 @@ func NewSubjectRepo(db *pgx.Conn) repoi.SubjectRepoI {
 }
 
 func (s *subjectRepo) CreateSubject(ctx context.Context, req *models.Subject) error {
+
+	query := `
+	
+		INSERT INTO subjects (
+			subject_id,
+			subject_name,
+			group_id,
+			teacher_id,
+			created_at,
+			updated_at
+		) VALUES (
+			$1, $2, $3, $4, $5, $6 
+		)
+	`
+
+	_, err := s.conn.Exec(
+		ctx,query,
+		req.SubjectID,
+		req.SubjectName,
+		req.GroupID,
+		req.TeacherID,
+		req.CreatedAt,
+		req.UpdatedAt,
+	)
+
+	if err != nil {
+		log.Println("error with Create Subject", err)
+		return err
+	}
+
 	return nil
 }
 
