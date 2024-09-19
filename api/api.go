@@ -14,6 +14,9 @@ func Api(storage storage.StorageI) {
 
 	router.GET("/ping", h.Ping)
 
+	router.POST("/create-teacher", h.CreateTeacher)
+	
+
 	router.Run(":8080")
 
 }
