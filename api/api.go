@@ -22,6 +22,13 @@ func Api(storage storage.StorageI) {
 
 	router.POST("/create-course", h.CreateCourse)
 
+	// group
+
+	router.POST("/create-group",h.CreatGroup)
+
+	// subject
+
+	router.POST("/create-subject", h.CreateSubject)
 
 	router.Run(":8080")
 
