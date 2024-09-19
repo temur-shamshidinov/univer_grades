@@ -49,7 +49,7 @@ type Config struct {
 }
 
 func NewConfig() Config {
-	return Config{GeneralConfig: GeneralConfig{AppName: "univer_grades=#"}}
+	return Config{GeneralConfig: GeneralConfig{AppName: "univer_grades"}}
 }
 
 func Load() Config {
