@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"log"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/temur-shamshidinov/univer_grades/models"
@@ -18,6 +19,35 @@ func NewTeacherRepo(db *pgx.Conn) repoi.TeacherRepoI {
 
 func (t *teacherRepo) CreateTeacher(ctx context.Context, req *models.Teacher) error {
 
+	query := `
+		INSERT INTO teachers(
+			teacher_id,
+			name,
+			surname,
+			email,
+			password,
+			created_at,
+			updated_at
+		) VALUES(
+			$1, $2, $3, $4, $5, $6, $7 
+		)
+	`
+
+	_, err := t.conn.Exec(
+		ctx, query,
+		req.TeacherID,
+		req.Name,
+		req.Surname,
+		req.Email,
+		req.Password,
+		req.CreatedAt,
+		req.UpdateAt,
+	)
+
+	if err != nil {
+		log.Println("error with CreateTeacher", err)
+		return  err
+	}
 	
 	return nil
 }
