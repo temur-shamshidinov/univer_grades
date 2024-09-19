@@ -30,6 +30,10 @@ func Api(storage storage.StorageI) {
 
 	router.POST("/create-subject", h.CreateSubject)
 
+	// student
+
+	router.POST("/create-student",h.CreatStudent)
+
 	router.Run(":8080")
 
 }
