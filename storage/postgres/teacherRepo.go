@@ -17,6 +17,8 @@ func NewTeacherRepo(db *pgx.Conn) repoi.TeacherRepoI {
 }
 
 func (t *teacherRepo) CreateTeacher(ctx context.Context, req *models.Teacher) error {
+
+	
 	return nil
 }
 func (t *teacherRepo) GetTeacherList(ctx context.Context, req *models.GetListReq) (*models.GetTeacherList, error) {
