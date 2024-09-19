@@ -8,7 +8,6 @@ require (
 	github.com/jackc/pgx/v5 v5.7.1
 	github.com/joho/godotenv v1.5.1
 	github.com/spf13/cast v1.7.0
-	google.golang.org/genproto v0.0.0-20240903143218-8af14fe29dc1
 )
 
 require (

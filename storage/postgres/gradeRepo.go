@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"log"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/temur-shamshidinov/univer_grades/models"
@@ -17,6 +18,40 @@ func NewGradeRepo(db *pgx.Conn) repoi.GradeRepoI {
 }
 
 func (g *gradeRepo) CreateGrade(ctx context.Context, req *models.Grade) error {
+	
+	query := `
+		INSERT INTO grades(
+			grade_id,
+			grade_name,
+			grade_value,
+			grade_date,
+			subject_id,
+			group_id,
+			student_id,
+			created_id,
+			updated_id
+		) VALUES(
+			$1, $2, $3, $4, $5, $6, $7, $8, $9
+		)
+	`
+	
+	_, err := g.conn.Exec(
+		ctx,query,
+		req.GradeID,
+		req.GradeName,
+		req.GradeValue,
+		req.GradeDate,
+		req.SubjectID,
+		req.GroupID,
+		req.StudentID,
+		req.CreatedAt,
+		req.UpdatedAt,
+	)
+	if err != nil {
+		log.Println("Error with Create Grade", err)
+		return err
+	}
+	
 	return nil
 }
 
