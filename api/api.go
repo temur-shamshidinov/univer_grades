@@ -14,8 +14,14 @@ func Api(storage storage.StorageI) {
 
 	router.GET("/ping", h.Ping)
 
+	// teacher
+
 	router.POST("/create-teacher", h.CreateTeacher)
-	
+
+	// course
+
+	router.POST("/create-course", h.CreateCourse)
+
 
 	router.Run(":8080")
 
