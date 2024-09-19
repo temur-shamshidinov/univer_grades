@@ -34,6 +34,10 @@ func Api(storage storage.StorageI) {
 
 	router.POST("/create-student",h.CreatStudent)
 
+	// grade
+
+	router.POST("/create-grade",h.CreatGrade)
+
 	router.Run(":8080")
 
 }
