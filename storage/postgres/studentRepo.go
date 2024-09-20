@@ -33,7 +33,7 @@ func (s *studentRepo) CreateStudent(ctx context.Context, req *models.Student) er
 	`
 
 	_, err := s.conn.Exec(
-		ctx,query,
+		ctx, query,
 		req.StudentID,
 		req.Name,
 		req.Surname,
@@ -41,9 +41,9 @@ func (s *studentRepo) CreateStudent(ctx context.Context, req *models.Student) er
 		req.CreatedAt,
 		req.UpdatedAt,
 	)
-	
+
 	if err != nil {
-		log.Println("Error with Create Student",err)
+		log.Println("Error with Create Student", err)
 		return err
 	}
 
@@ -51,7 +51,62 @@ func (s *studentRepo) CreateStudent(ctx context.Context, req *models.Student) er
 }
 
 func (s *studentRepo) GetStudentList(ctx context.Context, req *models.GetListReq) (*models.GetStudentsList, error) {
-	return nil, nil
+
+	limit := req.Limit
+	page := req.Page
+
+	page = (page - 1) * limit
+
+	query := `
+		SELECT 
+			student_id,
+			name,
+			surname,
+			group_id,
+			created_at,
+			updated_at
+		FROM
+			students
+		LIMIT 
+			$1
+		OFFSET 
+			$2
+	`
+	rows, err := s.conn.Query(ctx, query, limit, page)
+	if err != nil {
+		log.Println("Error on GetStudentList:", err)
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var students []*models.Student
+	for rows.Next() {
+		var student models.Student
+		if err := rows.Scan(
+			&student.StudentID,
+			&student.Name,
+			&student.Surname,
+			&student.GroupID,
+			&student.CreatedAt,
+			&student.UpdatedAt,
+		); err != nil {
+			log.Println("Error on scaning student:", err)
+			return nil, err
+		}
+		students = append(students, &student)
+	}
+
+	if err = rows.Err(); err != nil {
+		log.Println("Error on rows:", err)
+		return nil, err
+	}
+
+	return &models.GetStudentsList{
+		Students: students,
+		Count:    len(students),
+	}, nil
+
 }
 
 func (s *studentRepo) GetStudentByID(ctx context.Context, id string) (*models.Student, error) {
