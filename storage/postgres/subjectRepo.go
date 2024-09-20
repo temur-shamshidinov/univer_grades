@@ -34,7 +34,7 @@ func (s *subjectRepo) CreateSubject(ctx context.Context, req *models.Subject) er
 	`
 
 	_, err := s.conn.Exec(
-		ctx,query,
+		ctx, query,
 		req.SubjectID,
 		req.SubjectName,
 		req.GroupID,
@@ -52,7 +52,64 @@ func (s *subjectRepo) CreateSubject(ctx context.Context, req *models.Subject) er
 }
 
 func (s *subjectRepo) GetSubjectList(ctx context.Context, req *models.GetListReq) (*models.GetSubjectsList, error) {
-	return nil, nil
+
+	limit := req.Limit
+	page := req.Page
+
+	page = (page - 1) * limit
+
+	query := `
+		SELECT
+			subject_id,
+			subject_name,
+			group_id,
+			teacher_id,
+			created_at,
+			updated_at
+		FROM
+			subjects
+		LIMIT 
+			$1
+		OFFSET 
+			$2
+	`
+
+	rows, err := s.conn.Query(
+		ctx, query, limit, page,
+	)
+	if err != nil {
+		log.Println("Error on rows:", err)
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var subjects []*models.Subject
+	var count int
+	for rows.Next() {
+		var subject models.Subject
+		err := rows.Scan(
+			&subject.SubjectID,
+			&subject.SubjectName,
+			&subject.GroupID,
+			&subject.TeacherID,
+			&subject.CreatedAt,
+			&subject.UpdatedAt,
+		)
+		if err != nil {
+			log.Println("Error with SubjectScan:", err)
+			return nil, err
+		}
+
+		subjects = append(subjects, &subject)
+		count++
+	}
+
+	return &models.GetSubjectsList{
+		Subjects: subjects,
+		Count:    count,
+	}, nil
+
 }
 
 func (s *subjectRepo) GetSubjectByID(ctx context.Context, id string) (*models.Subject, error) {
