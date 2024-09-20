@@ -28,8 +28,8 @@ func (g *gradeRepo) CreateGrade(ctx context.Context, req *models.Grade) error {
 			subject_id,
 			group_id,
 			student_id,
-			created_id,
-			updated_id
+			created_at,
+			updated_at
 		) VALUES(
 			$1, $2, $3, $4, $5, $6, $7, $8, $9
 		)

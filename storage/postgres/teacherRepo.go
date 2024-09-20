@@ -46,16 +46,70 @@ func (t *teacherRepo) CreateTeacher(ctx context.Context, req *models.Teacher) er
 
 	if err != nil {
 		log.Println("error with CreateTeacher", err)
-		return  err
+		return err
 	}
 
 	return nil
 }
 func (t *teacherRepo) GetTeacherList(ctx context.Context, req *models.GetListReq) (*models.GetTeacherList, error) {
-	
-	
-	
-	return nil, nil
+
+	limit := req.Limit
+	page := req.Page
+
+	page = (page - 1) * limit
+
+	query := `
+		SELECT 
+			teacher_id,
+			name,
+			surname,
+			email,
+			created_at,
+			updated_at
+		FROM 
+			teachers
+		LIMIT
+			$1
+		OFFSET
+			$2
+	`
+
+	rows, err := t.conn.Query(ctx, query, limit, page)
+	if err != nil {
+		log.Println("Error on GetTeacherList:", page)
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var teachers []*models.Teacher
+	for rows.Next() {
+
+		var teacher models.Teacher
+		if err := rows.Scan(
+			&teacher.TeacherID,
+			&teacher.Name,
+			&teacher.Surname,
+			&teacher.Email,
+			&teacher.CreatedAt,
+			&teacher.UpdateAt,
+		); err != nil {
+			log.Println("Error on scaning teacher:", err)
+			return nil, err
+		}
+		teachers = append(teachers, &teacher)
+	}
+
+	if err = rows.Err(); err != nil {
+		log.Println("Error on Rows:", err)
+		return nil, err
+	}
+
+	return &models.GetTeacherList{
+		Teachers: teachers,
+		Count:    len(teachers),
+	}, nil
+
 }
 func (t *teacherRepo) GetTeacherByID(ctx context.Context, id string) (*models.Teacher, error) {
 	return nil, nil
